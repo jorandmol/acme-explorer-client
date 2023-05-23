@@ -27,6 +27,9 @@
             <li *ngIf="activeRole === 'explorer'">
               <a i18n class="dropdown-item" routerLink="/applications">Applications</a>
             </li>
+            <li *ngIf="activeRole === 'explorer'">
+              <a i18n class="dropdown-item" routerLink="/trips/history">Trip history</a>
+            </li>
             <li>
               <hr *ngIf="activeRole === 'manager'" class="dropdown-divider">
             </li>

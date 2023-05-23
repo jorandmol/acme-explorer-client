@@ -21,6 +21,7 @@ import { ExplorerApplicationsComponent } from './components/application/explorer
 import { ActorListComponent } from './components/actor/actor-list/actor-list.component';
 import { ActorDisplayComponent } from './components/actor/actor-display/actor-display.component';
 import { LeaveFormGuard } from './guards/leave-form.guard';
+import { TripHistoryComponent } from './components/trip/trip-history/trip-history.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [ActorRoleGuard], data: { expectedRoles: [Role.ANONYMOUS] } },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'sponsorships', component: SponsorshipListComponent, canActivate: [ActorRoleGuard], data: { expectedRoles: [Role.SPONSOR] } },
   { path: 'sponsorships/:id', component: SponsorshipDisplayComponent, canActivate: [ActorRoleGuard], data: { expectedRoles: [Role.SPONSOR] } },
   { path: 'trips', children: [
+    { path: 'history', component: TripHistoryComponent, canActivate: [ActorRoleGuard], data: { expectedRoles: [Role.EXPLORER] } },
     { path: 'create', component: TripCreateComponent, canActivate: [ActorRoleGuard], canDeactivate: [LeaveFormGuard], data: { expectedRoles: [Role.MANAGER] } },
     { path: ':id/applications', component: TripApplicationsComponent, canActivate: [ActorRoleGuard], data: { expectedRoles: [Role.MANAGER] } },
     { path: ':id', component: TripDisplayComponent },

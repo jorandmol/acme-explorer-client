@@ -131,6 +131,7 @@ export class AuthService {
       }
     } else {
       localStorage.removeItem('currentActor');
+      localStorage.removeItem('tripHistory');
       this.cookieService.delete('currentToken');
     }
   }

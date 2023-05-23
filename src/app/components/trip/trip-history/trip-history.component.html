@@ -1,0 +1,32 @@
+<div class="breadcrumb">
+  <legend class="d-flex justify-content-between">
+    <span i18n>Trip history</span>
+    <button i18n class="btn btn-sm btn-danger" *ngIf="trips && trips.length > 0" (click)="deleteHistory()">Clean history</button>
+  </legend>
+</div>
+
+<div i18n *ngIf="!trips || trips.length == 0">
+  Sorry, no trip history found.
+</div>
+
+<table *ngIf="trips && trips.length > 0" id="tripHistoryTable" class="table table-striped">
+  <thead>
+    <tr>
+      <th i18n scope="col">Ticker</th>
+      <th i18n scope="col">Visited at</th>
+      <th i18n scope="col">Title</th>
+      <th i18n scope="col" class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let trip of trips; let i = index" [ngClass]="{ 'table-warning': i === 0 }">
+      <td class="align-middle" scope="row">{{trip.ticker}} <i *ngIf="i === 0" class="fa-regular fa-hourglass-half fa-sm"></i></td>
+      <td class="align-middle">{{trip.date | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+      <td class="align-middle">{{trip.title}}</td>
+      <td class="text-center align-middle">
+        <a i18n class="btn btn-info" routerLink="{{trip.url}}">Trip</a>
+        <a i18n class="btn btn-danger" (click)="deleteTripFromHistory(trip)">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

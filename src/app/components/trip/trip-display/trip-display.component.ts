@@ -74,6 +74,12 @@ export class TripDisplayComponent implements OnInit {
 
       this.tripService.getTrip(this.id).subscribe((trip) => {
         this.trip = trip;
+
+        // In case user is explorer, add trip to his/her trip history
+        if (this.actor && this.actor.role === Role.EXPLORER) {
+          this.tripService.addTripHistory(this.trip);
+        }
+
         this.resetInfoForm();
 
         this.hasExpired = this.setHasExpired();

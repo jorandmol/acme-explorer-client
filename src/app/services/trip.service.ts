@@ -5,7 +5,9 @@ import { Trip } from '../models/trip';
 import { AuthService } from './auth.service';
 import { Application } from '../models/application';
 import { firstValueFrom } from 'rxjs';
+import { HistoryTrip } from '../models/history-trip';
 
+const TRIP_HISTORY = 'tripHistory';
 @Injectable({
   providedIn: 'root'
 })
@@ -186,6 +188,57 @@ export class TripService {
           reject(error);
         })
     });
+  }
+
+  getTripHistory(): HistoryTrip[] {
+    const tripHistoryStorage = localStorage.getItem(TRIP_HISTORY);
+    if (!tripHistoryStorage) {
+      return [];
+    }
+
+    const tripHistory = JSON.parse(tripHistoryStorage);
+    return tripHistory;
+  }
+
+  addTripHistory(trip: Trip): HistoryTrip[] {
+    const now = new Date();
+    const historyTrip = {
+      _id: `${trip._id}-${now.getTime()}`,
+      ticker: trip.ticker,
+      title: trip.title,
+      url: `/trips/${trip._id}`,
+      date: now
+    } as HistoryTrip;
+    const tripHistory = [ historyTrip ];
+
+    const tripHistoryStorage = localStorage.getItem(TRIP_HISTORY);
+    if (tripHistoryStorage) {
+      const prevTripHistory: HistoryTrip[] = JSON.parse(tripHistoryStorage);
+      tripHistory.push(...prevTripHistory);
+    }
+
+    localStorage.setItem(TRIP_HISTORY, JSON.stringify(tripHistory));
+    return tripHistory;
+  }
+
+  deleteTripFromHistory(historyTrip: HistoryTrip): boolean {
+    const tripHistoryStorage = localStorage.getItem(TRIP_HISTORY);
+    if (!tripHistoryStorage) {
+      return true;
+    }
+
+    const prevTripHistory: HistoryTrip[] = JSON.parse(tripHistoryStorage);
+    const tripHistory: HistoryTrip[] = prevTripHistory.filter(ht => {
+      return ht._id !== historyTrip._id
+    })
+
+    localStorage.setItem(TRIP_HISTORY, JSON.stringify(tripHistory));
+    return prevTripHistory.length === tripHistory.length + 1;
+  }
+
+  deleteTripHistory(): boolean {
+    localStorage.setItem(TRIP_HISTORY, JSON.stringify([]));
+    return true;
   }
 
 }
